@@ -1,8 +1,11 @@
-package gui;
+package gui.board;
 
 import javafx.scene.control.Button;
+import player.Player;
 
 public class GameButton extends Button {
+	
+	private Player owner;
 	
 	public GameButton(String s){
 		super(s);
@@ -14,6 +17,6 @@ public class GameButton extends Button {
 	
 	@Override
 	public String toString(){
-		return "GameButton(" + "content" + ")";
+		return "GameButton(" + "owner: " + owner + ")";
 	}
 }

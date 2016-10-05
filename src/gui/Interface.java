@@ -1,5 +1,6 @@
 package gui;
 
+import gui.board.GameBoard;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -19,10 +20,14 @@ public class Interface extends Application {
 
 		// set up grid pane
 		GameBoard board = new GameBoard(7, 7);
+		NewGameScene nGameScene = new NewGameScene();
 
-		Scene scene = new Scene(board);
-		primaryStage.setScene(scene);
-		Logger.registerScene(scene);
+		Scene boardScene = new Scene(board);
+		Scene nGSScene = new Scene(nGameScene);
+		
+		primaryStage.setScene(nGSScene);
+		Logger.registerScene(nGSScene);
+		
 		primaryStage.show();
 	}
 
