@@ -3,15 +3,15 @@ package gui.board;
 import javafx.scene.control.Button;
 import player.Player;
 
-public class GameButton extends Button {
+public class GameCell extends Button {
 	
 	private Player owner;
 	
-	public GameButton(String s){
+	public GameCell(String s){
 		super(s);
 	}
 	
-	public GameButton(){
+	public GameCell(){
 		super();
 	}
 	
