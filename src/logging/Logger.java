@@ -4,45 +4,62 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
+import gui.board.GameCell;
+import player.Player;
 
 public class Logger {
 
-	private static BufferedWriter fileWriter;
-	private static final File logFile = new File("log.txt");
-	private static Scene scene;
+	private static BufferedWriter writer;
+	private static File logFile;
+	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+	private static final DateFormat dateAndTimeFormat = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
+	private static Calendar cal;
 	
-	public static void registerScene(Scene c){
-		scene = c;
-		listenToScene();
+	public static void initLogger(){
+		
+		cal = Calendar.getInstance()
+;		String logName = "log_" + dateFormat.format(cal.getTime());
+		logFile = new File(logName);
 		
 		try {
-			fileWriter = new BufferedWriter(new FileWriter(logFile, true));
+			writer = new BufferedWriter(new FileWriter(logFile, true));
 		} catch (IOException e) {
-			System.out.println("file log.txt does not exist. Creating new...");
-			try {
-				fileWriter = new BufferedWriter(new FileWriter(logFile));
-			} catch (IOException e1) {
-				System.out.println("Could not create new file :(");
-			}
+			System.out.println("Failed to write to " + logName);
 		}
 	}
 	
-	private static void listenToScene(){
-		scene.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseHandler);
+	public static void logUserClick(Player trigger, int x, int y){
+		cal = Calendar.getInstance();
+		String logString = dateAndTimeFormat.format(cal.getTime()) + "......" + trigger + " played shape @ " + "x: " + x + ", y: " + y;
+		
+		print(logString);
 	}
 	
-	private static EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
-		public void handle(MouseEvent ev){
-			try {
-				System.out.println(ev.toString());
-				fileWriter.write(ev.toString());
-			} catch (IOException e) {
-				System.out.println("Could not write log to file!");
-			}
+	public static void logWin(Player winner){
+		cal = Calendar.getInstance();
+		String logString = dateAndTimeFormat.format(cal.getTime()) + "......" + winner + " Won the game!";
+
+		print(logString);
+	}
+	
+	private static void print(String s){
+		try {
+			writer.write(s + "\n");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-	};
+	}
+	
+	public static void closeLogger(){
+		try {
+			writer.close();
+		} catch (IOException e) {
+			System.out.println("Failed to close Buffered Writer!");
+			e.printStackTrace();
+		}
+	}
 }

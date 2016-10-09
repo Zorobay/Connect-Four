@@ -1,12 +1,13 @@
 package gui;
 
 import gui.views.GameView;
-import gui.views.View;
 import gui.views.ViewSwitcher;
 import gui.views.WelcomeView;
 import javafx.application.Application;
-import javafx.scene.Scene;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import logging.Logger;
 import player.PlayerList;
 
 public class Connect4Interface extends Application {
@@ -18,6 +19,7 @@ public class Connect4Interface extends Application {
 
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Test Interface");
+		primaryStage.setOnCloseRequest(beforeExit);
 
 		ViewSwitcher switcher = new ViewSwitcher(primaryStage);
 		PlayerList pList = new PlayerList();
@@ -30,7 +32,14 @@ public class Connect4Interface extends Application {
 		//Set first view
 		switcher.setView(0);
 		
+		//Initialize logger
+		Logger.initLogger();
+		
 		primaryStage.show();
 	}
+	
+	private final EventHandler<WindowEvent> beforeExit = event -> {
+		Logger.closeLogger();
+	};
 
 }

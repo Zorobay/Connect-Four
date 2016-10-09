@@ -3,8 +3,7 @@ package gui.board;
 import javafx.scene.control.Button;
 import player.Player;
 
-//Package private class
-class GameCell extends Button {
+public class GameCell extends Button {
 	
 	private int x,y;
 	private Player owner;

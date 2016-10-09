@@ -5,16 +5,15 @@ import java.util.Observable;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import logging.Logger;
 import player.Player;
 import player.PlayerList;
-import sun.awt.image.ImageWatched.Link;
 
 public class GameBoard extends Observable {
 
@@ -35,6 +34,32 @@ public class GameBoard extends Observable {
 		fillBoard();
 	}
 	
+	private void setUp() {
+		boardGrid = new GameCell[rows][columns];
+
+		gridPane.setHgap(3);
+		gridPane.setVgap(3);
+		gridPane.setAlignment(Pos.TOP_LEFT);
+		gridPane.setGridLinesVisible(true);
+		gridPane.setPadding(new Insets(25, 25, 25, 25));
+	}
+
+	public Pane getUI() {
+		return gridPane;
+	}
+
+	private void fillBoard() {
+		for (int x = 0; x < rows; x++) {
+			for (int y = 0; y < columns; y++) {
+				GameCell butt = new GameCell(x, y);
+				butt.setPrefSize(80, 80);
+				butt.setOnMouseClicked(gameCellClicked);
+				boardGrid[x][y] = butt;
+				gridPane.add(butt, x, rows - y);
+			}
+		}
+	}
+	
 	public boolean isGameOver(){
 		return isGameOver;
 	}
@@ -48,8 +73,8 @@ public class GameBoard extends Observable {
 
 		return investigateRightLeft(player, x, y) 
 				|| investigateUppDown(player, x, y)
-				|| investigateDiagRightUppDown(player, x, y)
-				|| investigateDiagLeftUppDown(player, x, y);
+				|| investigateDiagRight(player, x, y)
+				|| investigateDiagLeft(player, x, y);
 
 	}
 
@@ -98,7 +123,7 @@ public class GameBoard extends Observable {
 		return cellsInARow >= 4;
 	}
 
-	private boolean investigateDiagRightUppDown(Player player, int x, int y){
+	private boolean investigateDiagRight(Player player, int x, int y){
 		
 		//Find right,upper-most cell that is owned by player
 		int upperX = x;
@@ -128,7 +153,7 @@ public class GameBoard extends Observable {
 				
 	}
 	
-	private boolean investigateDiagLeftUppDown(Player player, int x, int y){
+	private boolean investigateDiagLeft(Player player, int x, int y){
 		
 		//Find left,upper-most cell that is owned by player
 		int upperX = x;
@@ -157,32 +182,7 @@ public class GameBoard extends Observable {
 		return cellsInARow >= 4;
 				
 	}
-	
-	private void setUp() {
-		boardGrid = new GameCell[rows][columns];
 
-		gridPane.setHgap(3);
-		gridPane.setVgap(3);
-		gridPane.setAlignment(Pos.TOP_LEFT);
-		gridPane.setGridLinesVisible(true);
-		gridPane.setPadding(new Insets(25, 25, 25, 25));
-	}
-
-	public Pane getUI() {
-		return gridPane;
-	}
-
-	private void fillBoard() {
-		for (int x = 0; x < rows; x++) {
-			for (int y = 0; y < columns; y++) {
-				GameCell butt = new GameCell(x, y);
-				butt.setPrefSize(80, 80);
-				butt.setOnMouseClicked(gameCellClicked);
-				boardGrid[x][y] = butt;
-				gridPane.add(butt, x, rows - y);
-			}
-		}
-	}
 
 	/**
 	 * Find the first free vertical spot in column x.
@@ -202,6 +202,7 @@ public class GameBoard extends Observable {
 	private final EventHandler<MouseEvent> gameCellClicked = event -> {
 		GameCell gCell = (GameCell) event.getSource();
 		int y = findFreeSpot(gCell.getX());
+		Logger.logUserClick(playerList.getActivePlayer(), gCell.getX(), y);
 
 		if (y != -1) {
 			boardGrid[gCell.getX()][y].setBackground(new Background(
@@ -211,7 +212,7 @@ public class GameBoard extends Observable {
 			//Check win conditions
 			if(investigateWinner(playerList.getActivePlayer(), gCell.getX(), y)){
 				isGameOver = true;
-				System.out.println("WE HAVE A WINNER!: " + playerList.getActivePlayer().getName());
+				Logger.logWin(playerList.getActivePlayer());
 			}
 			
 			setChanged();

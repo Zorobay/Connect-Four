@@ -1,6 +1,7 @@
 package player;
 
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
 
 public class Player {
 
@@ -20,6 +21,10 @@ public class Player {
 		return color;
 	}
 	
+	public Shape getShape(){
+		return null;
+	}
+	
 	@Override
 	public boolean equals(Object obj){
 		if(obj instanceof Player){
@@ -27,5 +32,10 @@ public class Player {
 		}else{
 			return false;
 		}
+	}
+	
+	@Override
+	public String toString(){
+		return "Player(name: " + name + ", color: " + color + ", shape: null)";
 	}
 }
