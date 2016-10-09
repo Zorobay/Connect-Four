@@ -48,10 +48,11 @@ public class GameView extends View implements Observer{
 	public void update(Observable board, Object obj) {
 		
 		if(board == this.board){
-			if(((GameBoard) board).gameOver()){
+			if(((GameBoard) board).isGameOver()){
 				//end game
 			}else{
 				playerList.nextPlayer();
+				currentPlayer.setText(playerList.getActivePlayer().getName());
 			}
 		}
 		

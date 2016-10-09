@@ -8,7 +8,7 @@ class GameCell extends Button {
 	
 	private int x,y;
 	private Player owner;
-	private boolean owned;
+	private boolean owned = false;
 	
 	public GameCell(int x, int y){
 		super();
@@ -21,6 +21,7 @@ class GameCell extends Button {
 	}
 	
 	public void setOwned(Player owner){
+		setText("x: " + x + "\ny: " + y);
 		owned = true;
 		this.owner = owner;
 	}
