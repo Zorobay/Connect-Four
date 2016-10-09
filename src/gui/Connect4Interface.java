@@ -22,16 +22,14 @@ public class Connect4Interface extends Application {
 		ViewSwitcher switcher = new ViewSwitcher(primaryStage);
 		PlayerList pList = new PlayerList();
 		
+		//Create all views and add to ViewSwitcher
 		WelcomeView wView = new WelcomeView(pList, switcher);
 		GameView gView = new GameView(pList, switcher);
-		primaryStage.setScene(new Scene(wView.getUI()));
-		
 		switcher.setViewOrder(wView, gView);
 		
-		// Create list of scenes
-
-		// Create a scene switcher
-
+		//Set first view
+		switcher.setView(0);
+		
 		primaryStage.show();
 	}
 

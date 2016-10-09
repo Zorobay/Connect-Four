@@ -23,17 +23,19 @@ public class ViewSwitcher {
 		}
 	}
 
-	private void chooseView(View view) {
-		stage.setScene(new Scene(view.getUI()));
+	private void chooseView(int index) {
+		//Populate the pane with UI elements before showing the view.
+		views.get(index).setUp();
+		stage.setScene(new Scene(views.get(index).getUI()));
 	}
 
 	public void setView(int i){
 		if (i > views.size() - 1)
-			chooseView(views.get(views.size()-1));
+			chooseView(views.size()-1);
 		else if(i < 0)
-			chooseView(views.get(0));
+			chooseView(0);
 		else
-			chooseView(views.get(i));
+			chooseView(i);
 	}
 
 	public void nextView() {
@@ -46,6 +48,6 @@ public class ViewSwitcher {
 		else
 			viewCounter++;
 		
-		chooseView(views.get(viewCounter));
+		chooseView(viewCounter);
 	}
 }

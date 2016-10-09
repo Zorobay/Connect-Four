@@ -1,5 +1,6 @@
 package gui.views;
 
+import gui.guielements.TextInput;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -17,21 +18,20 @@ import player.PlayerList;
 public class WelcomeView extends View {
 
 	private final BorderPane pane = new BorderPane();
-	private TextField tFieldPlayer1;
-	private TextField tFieldPlayer2;
+	private TextInput tFieldPlayer1;
+	private TextInput tFieldPlayer2;
 	private Label title;
 	private Button goButton;
 
 	public WelcomeView(PlayerList pList, ViewSwitcher switcher) {
 		super(pList, switcher);
-		setUp();
 	}
 
-	private void setUp() {
-		VBox tFields = new VBox(10); //create and set spacing for VBox
+	public void setUp() {
+		VBox tFields = new VBox(10); // create and set spacing for VBox
 
-		tFieldPlayer1 = new TextField("Enter name of player 1");
-		tFieldPlayer2 = new TextField("Enter name of player 2");
+		tFieldPlayer1 = new TextInput("Enter name of player 1");
+		tFieldPlayer2 = new TextInput("Enter name of player 2");
 		title = new Label("Connect 4 - New Game");
 		title.setFont(Font.font("Cambria", 32));
 		goButton = new Button("GO!");
@@ -44,17 +44,21 @@ public class WelcomeView extends View {
 		pane.setTop(title);
 		pane.setCenter(tFields);
 	}
-	
+
 	@Override
-	public Pane getUI(){
+	public Pane getUI() {
 		return pane;
 	}
 
 	private final EventHandler<MouseEvent> goButtonClicked = event -> {
-		Player[] players = {new Player(tFieldPlayer1.getText(), Color.ALICEBLUE), new Player(tFieldPlayer2.getText(), Color.RED)};
+		Player[] players = { new Player(tFieldPlayer1.getText(), Color.ALICEBLUE),
+				new Player(tFieldPlayer2.getText(), Color.RED) };
 		playerList.setPlayerList(players);
 		playerList.setActive(players[0]);
 		viewSwitcher.nextView();
 	};
+	
+	@Override
+	public String toString(){return "Welcome View";}
 
 }

@@ -17,5 +17,11 @@ public class GOView extends View{
 		return pane;
 	}
 
+	@Override
+	public void setUp() {
+		
+		
+	}
+
 	
 }

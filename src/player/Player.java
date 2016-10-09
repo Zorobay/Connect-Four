@@ -19,4 +19,13 @@ public class Player {
 	public Color getColor(){
 		return color;
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if(obj instanceof Player){
+			return ((Player) obj).name.equals(name);
+		}else{
+			return false;
+		}
+	}
 }

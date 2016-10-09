@@ -1,8 +1,6 @@
 package gui.views;
 
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import player.PlayerList;
 
 public abstract class View{
@@ -15,5 +13,13 @@ public abstract class View{
 		this.playerList = pList;
 	}
 	
+	/**
+	 * @return The pane that contains all UI elements for this view.
+	 */
 	public abstract Pane getUI();
+	
+	/**
+	 * Adds content to the view. Is to be called right before switching views, by the ViewSwitcher.
+	 */
+	public abstract void setUp();
 }
