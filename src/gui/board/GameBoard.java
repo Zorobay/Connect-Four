@@ -23,12 +23,16 @@ public class GameBoard extends Observable {
 	private PlayerList playerList;
 	private boolean isGameOver = false;
 
-	public GameBoard(PlayerList pList, int xNum, int yNum) {
+	public GameBoard(PlayerList pList) {
 		super();
 		gridPane = new GridPane();
 		playerList = pList;
-		rows = xNum;
-		columns = yNum;
+	}
+	
+	public void setRowsAndCols(int rows, int cols){
+		this.rows = rows;
+		columns = cols;
+	
 
 		setUp();
 		fillBoard();

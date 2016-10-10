@@ -1,5 +1,6 @@
 package gui;
 
+import gui.board.GameBoard;
 import gui.views.GameView;
 import gui.views.ViewSwitcher;
 import gui.views.WelcomeView;
@@ -23,10 +24,11 @@ public class Connect4Interface extends Application {
 
 		ViewSwitcher switcher = new ViewSwitcher(primaryStage);
 		PlayerList pList = new PlayerList();
+		GameBoard gBoard = new GameBoard(pList);
 		
 		//Create all views and add to ViewSwitcher
-		WelcomeView wView = new WelcomeView(pList, switcher);
-		GameView gView = new GameView(pList, switcher);
+		WelcomeView wView = new WelcomeView(pList, switcher, gBoard);
+		GameView gView = new GameView(pList, switcher, gBoard);
 		switcher.setViewOrder(wView, gView);
 		
 		//Set first view

@@ -17,11 +17,11 @@ public class GameView extends View implements Observer{
 	private Label currentPlayer;
 	private BorderPane pane;
 	
-	public GameView(PlayerList pList, ViewSwitcher switcher){
+	public GameView(PlayerList pList, ViewSwitcher switcher, GameBoard gBoard){
 		super(pList, switcher);
 		
 		pane = new BorderPane();
-		board = new GameBoard(pList, 7,7);
+		board = gBoard;
 		board.addObserver(this);
 	}
 	
