@@ -1,18 +1,18 @@
 package gui.views;
 
+import gui.board.GameBoard;
 import javafx.scene.layout.Pane;
 import player.PlayerList;
 
 public abstract class View{
-
+	
 	protected PlayerList playerList;
-	protected ViewSwitcher viewSwitcher;
+	protected GameBoard gameBoard;
 	
-	public View(PlayerList pList, ViewSwitcher switcher){
-		this.viewSwitcher = switcher;
-		this.playerList = pList;
+	public View(PlayerList pList, GameBoard gameBoard){
+		playerList = pList;
+		this.gameBoard = gameBoard;
 	}
-	
 	/**
 	 * @return The pane that contains all UI elements for this view.
 	 */

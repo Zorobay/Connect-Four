@@ -22,6 +22,7 @@ public class GameBoard extends Observable {
 	private int rows, columns;
 	private PlayerList playerList;
 	private boolean isGameOver = false;
+	private boolean isDraw = false;
 
 	public GameBoard(PlayerList pList) {
 		super();
@@ -33,7 +34,6 @@ public class GameBoard extends Observable {
 		this.rows = rows;
 		columns = cols;
 	
-
 		setUp();
 		fillBoard();
 	}
@@ -44,22 +44,45 @@ public class GameBoard extends Observable {
 		gridPane.setHgap(3);
 		gridPane.setVgap(3);
 		gridPane.setAlignment(Pos.TOP_LEFT);
-		gridPane.setGridLinesVisible(true);
+		gridPane.setGridLinesVisible(false);
 		gridPane.setPadding(new Insets(25, 25, 25, 25));
 	}
 
 	public Pane getUI() {
 		return gridPane;
 	}
+	
+	public PlayerList getPlayerList(){
+		return playerList;
+	}
 
 	private void fillBoard() {
-		for (int x = 0; x < rows; x++) {
-			for (int y = 0; y < columns; y++) {
-				GameCell butt = new GameCell(x, y);
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < columns; c++) {
+				GameCell butt = new GameCell(r, c);
 				butt.setPrefSize(80, 80);
 				butt.setOnMouseClicked(gameCellClicked);
-				boardGrid[x][y] = butt;
-				gridPane.add(butt, x, rows - y);
+				butt.setOnMouseEntered(gameCellMouseOver);
+				butt.setOnMouseExited(gameCellMouseLeft);
+				boardGrid[r][c] = butt;
+				gridPane.add(butt, c, r);
+			}
+		}
+	}
+	
+	public void nuke(){
+		isGameOver = false;
+		isDraw = false;
+		boardGrid = null;
+		gridPane.getChildren().clear();
+	}
+	
+	public void resetRematch(){
+		isGameOver = false;
+		isDraw = false;
+		for(int r = 0; r < rows; r++){
+			for(int c = 0; c < columns; c++){
+				boardGrid[r][c].reset();
 			}
 		}
 	}
@@ -67,37 +90,40 @@ public class GameBoard extends Observable {
 	public boolean isGameOver(){
 		return isGameOver;
 	}
+	
+	public boolean isDraw(){
+		return isDraw;
+	}
 
-	private boolean investigateWinner(Player player, int x, int y) {
+	private boolean investigateWinner(Player player, int row, int col) {
 		/*
 		 * Walk right as far as the owner is player and we're not outside the
 		 * board. Then walk left towards the coin. If we can walk 4 steps
 		 * without the owner shifting, then player is winner
 		 */
 
-		return investigateRightLeft(player, x, y) 
-				|| investigateUppDown(player, x, y)
-				|| investigateDiagRight(player, x, y)
-				|| investigateDiagLeft(player, x, y);
-
+		return investigateRow(player, row, col)
+				|| investigateColumn(player, row, col)
+				|| investigateDiagRight(player, row, col)
+				|| investigateDiagLeft(player, row, col);
 	}
 
-	private boolean investigateRightLeft(Player player, int x, int y) {
+	private boolean investigateRow(Player player, int row, int col) {
 
 		// Find right-most cell that is still owned by player
-		int rightLimit = x;
-		while (rightLimit + 1 < columns 
-				&& boardGrid[rightLimit + 1][y].isOwned() 
-				&& boardGrid[rightLimit + 1][y].getOwner().equals(player)) {
-			rightLimit++;
+		int colLimit = col;
+		while (colLimit + 1 < columns 
+				&& boardGrid[row][colLimit + 1].isOwned() 
+				&& boardGrid[row][colLimit + 1].getOwner().equals(player)) {
+			colLimit++;
 		}
 
 		// Walk left and see if we can find 4 cells owned by the same player
 		int cellsInARow = 0;
-		int pos = rightLimit;
+		int pos = colLimit;
 		while (pos >= 0 
-				&& boardGrid[pos][y].isOwned()
-				&& boardGrid[pos][y].getOwner().equals(player)) {
+				&& boardGrid[row][pos].isOwned()
+				&& boardGrid[row][pos].getOwner().equals(player)) {
 			cellsInARow++;
 			pos--;
 		}
@@ -105,118 +131,127 @@ public class GameBoard extends Observable {
 		return cellsInARow >= 4;
 	}
 
-	private boolean investigateUppDown(Player player, int x, int y) {
-		// Find upper-most cell that is still owned by player
-		int upperLimit = y;
-		while (upperLimit + 1 < rows 
-				&& boardGrid[x][upperLimit + 1].isOwned()
-				&& boardGrid[x][upperLimit + 1].getOwner().equals(player)) {
-			upperLimit++;
-		}
-
-		// Walk down and see if we can find 4 cells owned by the same player in a row
+	private boolean investigateColumn(Player player, int row, int col) {
+		// For columns, the upper limit will be the row index
+		// Traverse down and see if we can find 4 cells owned by the same player in a row
 		int cellsInARow = 0;
-		int pos = upperLimit;
-		while (pos >= 0 
-				&& boardGrid[x][pos].isOwned()
-				&& boardGrid[x][pos].getOwner().equals(player)) {
+		int pos = row;
+		while (pos < rows 
+				&& boardGrid[pos][col].isOwned()
+				&& boardGrid[pos][col].getOwner().equals(player)) {
 			cellsInARow++;
-			pos--;
+			pos++;
 		}
 
 		return cellsInARow >= 4;
 	}
 
-	private boolean investigateDiagRight(Player player, int x, int y){
+	private boolean investigateDiagRight(Player player, int row, int col){
 		
 		//Find right,upper-most cell that is owned by player
-		int upperX = x;
-		int upperY = y;
-		while(upperX + 1< columns 
-				&& upperY + 1 < rows 
-				&& boardGrid[upperX + 1][upperY + 1].isOwned()
-				&& boardGrid[upperX + 1][upperY + 1].getOwner().equals(player)){
-			upperX++;
-			upperY++;
+		int upperRow = row;
+		int upperCol = col;
+		while(upperRow + 1 < rows 
+				&& upperCol + 1 < columns 
+				&& boardGrid[upperRow + 1][upperCol + 1].isOwned()
+				&& boardGrid[upperRow + 1][upperCol + 1].getOwner().equals(player)){
+			upperRow++;
+			upperCol++;
 		}
 		
 		//Traverse diagonally down (left) and see if we can find 4 owned by player in a row
 		int cellsInARow = 0;
-		int posx = upperX;
-		int posy = upperY;
-		while(posx >= 0 
-				&& posy >= 0
-				&& boardGrid[posx][posy].isOwned()
-				&& boardGrid[posx][posy].getOwner().equals(player)){
+		int posRow = upperRow;
+		int posCol = upperCol;
+		while(posRow < rows 
+				&& posCol >= 0
+				&& boardGrid[posRow][posCol].isOwned()
+				&& boardGrid[posRow][posCol].getOwner().equals(player)){
 			cellsInARow++;
-			posx--;
-			posy--;
+			posRow++;
+			posCol--;
 		}
 		
 		return cellsInARow >= 4;
 				
 	}
 	
-	private boolean investigateDiagLeft(Player player, int x, int y){
+	private boolean investigateDiagLeft(Player player, int row, int col){
 		
 		//Find left,upper-most cell that is owned by player
-		int upperX = x;
-		int upperY = y;
-		while(upperX - 1 >= 0 
-				&& upperY + 1 < rows 
-				&& boardGrid[upperX - 1][upperY + 1].isOwned()
-				&& boardGrid[upperX - 1][upperY + 1].getOwner().equals(player)){
-			upperX--;
-			upperY++;
+		int upperRow = row;
+		int upperCol = col;
+		while(upperRow - 1 >= 0 
+				&& upperCol - 1 >= 0 
+				&& boardGrid[upperRow - 1][upperCol - 1].isOwned()
+				&& boardGrid[upperRow - 1][upperCol - 1].getOwner().equals(player)){
+			upperRow--;
+			upperCol--;
 		}
 		
 		//Traverse diagonally down (right) and see if we can find 4 owned by player in a row
 		int cellsInARow = 0;
-		int posx = upperX;
-		int posy = upperY;
-		while(posx < columns 
-				&& posy >= 0
-				&& boardGrid[posx][posy].isOwned()
-				&& boardGrid[posx][posy].getOwner().equals(player)){
+		int posRow = upperRow;
+		int posCol = upperCol;
+		while(posRow < rows 
+				&& posCol < columns
+				&& boardGrid[posRow][posCol].isOwned()
+				&& boardGrid[posRow][posCol].getOwner().equals(player)){
 			cellsInARow++;
-			posx++;
-			posy--;
+			posRow++;
+			posCol++;
 		}
 		
 		return cellsInARow >= 4;
 				
 	}
 
-
 	/**
-	 * Find the first free vertical spot in column x.
-	 * @param x the horizontal position of the column that you want to drop a coin into
-	 * @return the vertical position where the coin should land, or -1 if the column is full
+	 * Checks to see if the entire board is full
+	 * @return true if the entire board is owned by a player, else false
 	 */
-	private int findFreeSpot(int x) {
-		for (int y = 0; y < columns; y++) {
-			if (!boardGrid[x][y].isOwned()) { // find first free spot vertically
-				return y;
+	private boolean investigateDraw(){
+		for(int row = 0; row < rows; row++){
+			for(int col = 0; col < columns; col++){
+				if(!boardGrid[row][col].isOwned())
+					return false;
 			}
 		}
-		// no free spot was found. Column is full
-		return -1;
+		return true;
+	}
+	
+	/**
+	 * Find the first free vertical spot in column col.
+	 * @param col the horizontal position of the column that you want to drop a coin into
+	 * @return the vertical position where the coin should land, or -1 if the column is full
+	 */
+	private int findFreeRow(int col) {
+		int freeRow = -1;
+		while (freeRow + 1 < rows && !boardGrid[freeRow + 1][col].isOwned()) { //Traverse down while there is a free spot
+			freeRow++;
+		}
+		// return freeRow (-1 if column is full)
+		return freeRow;
 	}
 
 	private final EventHandler<MouseEvent> gameCellClicked = event -> {
 		GameCell gCell = (GameCell) event.getSource();
-		int y = findFreeSpot(gCell.getX());
-		Logger.logUserClick(playerList.getActivePlayer(), gCell.getX(), y);
+		int row = findFreeRow(gCell.getCol());
+		Logger.logUserClick(playerList.getActivePlayer(), row, gCell.getCol());
 
-		if (y != -1) {
-			boardGrid[gCell.getX()][y].setBackground(new Background(
-					new BackgroundFill(playerList.getActivePlayer().getColor(), CornerRadii.EMPTY, Insets.EMPTY)));
-			boardGrid[gCell.getX()][y].setOwned(playerList.getActivePlayer());
+		if (row != -1) {
+			boardGrid[row][gCell.getCol()].setOwned(playerList.getActivePlayer());
 			
 			//Check win conditions
-			if(investigateWinner(playerList.getActivePlayer(), gCell.getX(), y)){
+			if(investigateWinner(playerList.getActivePlayer(), row, gCell.getCol())){
+				System.out.println("WINNER: " + playerList.getActivePlayer());
 				isGameOver = true;
-				Logger.logWin(playerList.getActivePlayer());
+				playerList.setWinner(playerList.getActivePlayer());
+				Logger.logWin(playerList.getWinner());
+			}else if(investigateDraw()){
+				System.out.println("We have a draw!");
+				isDraw = true;
+				Logger.logDraw(playerList);
 			}
 			
 			setChanged();
@@ -224,4 +259,21 @@ public class GameBoard extends Observable {
 		}
 	};
 
+	private final EventHandler<MouseEvent> gameCellMouseOver = event -> {
+		GameCell gCell = (GameCell) event.getSource();
+		int col = gCell.getCol();
+		
+		for(int r = 0; r < rows; r++){
+			boardGrid[r][col].highlight();
+		}
+	};
+	
+	private final EventHandler<MouseEvent> gameCellMouseLeft = event -> {
+		GameCell gCell = (GameCell) event.getSource();
+		int col = gCell.getCol();
+		
+		for(int r = 0; r < rows; r++){
+			boardGrid[r][col].lowlight();
+		}
+	};
 }

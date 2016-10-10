@@ -1,6 +1,7 @@
 package gui;
 
 import gui.board.GameBoard;
+import gui.views.GOView;
 import gui.views.GameView;
 import gui.views.ViewSwitcher;
 import gui.views.WelcomeView;
@@ -13,26 +14,34 @@ import player.PlayerList;
 
 public class Connect4Interface extends Application {
 
+	private Stage primaryStage;
+	
 	public static void main(String[] args) {
 
 		launch(args);
 	}
 
 	public void start(Stage primaryStage) throws Exception {
-		primaryStage.setTitle("Test Interface");
+		this.primaryStage = primaryStage;
+		
+		resetGame();
+	}
+	
+	private void resetGame(){
+		primaryStage.setTitle("Connect Four");
 		primaryStage.setOnCloseRequest(beforeExit);
 
-		ViewSwitcher switcher = new ViewSwitcher(primaryStage);
 		PlayerList pList = new PlayerList();
 		GameBoard gBoard = new GameBoard(pList);
 		
 		//Create all views and add to ViewSwitcher
-		WelcomeView wView = new WelcomeView(pList, switcher, gBoard);
-		GameView gView = new GameView(pList, switcher, gBoard);
-		switcher.setViewOrder(wView, gView);
+		WelcomeView wView = new WelcomeView(pList, gBoard);
+		GameView gView = new GameView(pList, gBoard);
+		GOView goView = new GOView(pList, gBoard);
+		ViewSwitcher.initiateViewSwitcher(primaryStage, wView, gView, goView);
 		
 		//Set first view
-		switcher.setView(0);
+		ViewSwitcher.setWelcomeView();
 		
 		//Initialize logger
 		Logger.initLogger();

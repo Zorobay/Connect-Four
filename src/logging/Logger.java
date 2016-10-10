@@ -8,8 +8,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import gui.board.GameCell;
 import player.Player;
+import player.PlayerList;
 
 public class Logger {
 
@@ -21,14 +21,14 @@ public class Logger {
 	
 	public static void initLogger(){
 		
-		cal = Calendar.getInstance()
-;		String logName = "log_" + dateFormat.format(cal.getTime());
+		cal = Calendar.getInstance();
+		String logName = "log_" + dateFormat.format(cal.getTime());
 		logFile = new File(logName);
 		
 		try {
 			writer = new BufferedWriter(new FileWriter(logFile, true));
 		} catch (IOException e) {
-			System.out.println("Failed to write to " + logName);
+			System.out.println("Failed to open or create " + logName);
 		}
 	}
 	
@@ -36,19 +36,30 @@ public class Logger {
 		cal = Calendar.getInstance();
 		String logString = dateAndTimeFormat.format(cal.getTime()) + "......" + trigger + " played shape @ " + "x: " + x + ", y: " + y;
 		
-		print(logString);
+		log(logString);
 	}
 	
 	public static void logWin(Player winner){
 		cal = Calendar.getInstance();
 		String logString = dateAndTimeFormat.format(cal.getTime()) + "......" + winner + " Won the game!";
 
-		print(logString);
+		log(logString);
 	}
 	
-	private static void print(String s){
+	public static void logDraw(PlayerList playerList){
+		cal = Calendar.getInstance();
+		String logString = dateAndTimeFormat.format(cal.getTime()) + "......" + "Draw between ";
+		
+		for(Player p : playerList.getPlayerList())
+			logString += p + " and ";
+		
+		log(logString);
+	}
+	
+	private static void log(String s){
 		try {
-			writer.write(s + "\n");
+			writer.write(s);
+			writer.newLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

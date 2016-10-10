@@ -1,40 +1,59 @@
 package gui.board;
 
 import javafx.scene.control.Button;
+import javafx.scene.effect.Reflection;
 import player.Player;
 
 public class GameCell extends Button {
 	
-	private int x,y;
+	private int row,col;
 	private Player owner;
 	private boolean owned = false;
+	private final String defaultStyle = "-fx-background-color: RED";
 	
-	public GameCell(int x, int y){
+	public GameCell(int row, int col){
 		super();
-		this.x = x;
-		this.y = y;
+		setStyle(defaultStyle);
+		this.setOpacity(0.4);
+		this.row = row;
+		this.col = col;
 	}
 	
+	public void highlight(){
+		setOpacity(1);
+	}
+	
+	public void lowlight(){
+		if(!owned)
+		setOpacity(0.4);
+	}
 	public boolean isOwned(){
 		return owned;
 	}
 	
 	public void setOwned(Player owner){
-		setText("x: " + x + "\ny: " + y);
+		setOpacity(1);
+		setStyle("-fx-background-color: " + owner.getColorCSS());
 		owned = true;
 		this.owner = owner;
 	}
 	
+	public void reset(){
+		setOpacity(0.4);
+		owner = null;
+		owned = false;
+		this.setStyle(defaultStyle);
+	}
 	public Player getOwner(){
 		return owner;
 	}
 	
-	public int getX(){
-		return x;
+	public int getRow(){
+		return row;
 	}
 	
-	public int getY(){
-		return y;
+	public int getCol(){
+		return col;
 	}
 	
 	@Override

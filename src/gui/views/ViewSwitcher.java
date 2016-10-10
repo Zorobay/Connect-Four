@@ -1,53 +1,49 @@
 package gui.views;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class ViewSwitcher {
 
-	private Stage stage;
-	private int viewCounter = 0;
-	private List<View> views;
+	private static Stage primaryStage;
+	private static View welcomeView, gameView, gameOverView;
+	private static Scene welcomeScene, gameScene, gameOverScene;
 
-	public ViewSwitcher(Stage stage) {
-		this.stage = stage;
-		views = new LinkedList<View>();
+	public static void initiateViewSwitcher(Stage stage, WelcomeView wView, GameView gView, GOView goView) {
+		primaryStage = stage;
+		ViewSwitcher.welcomeView = wView;
+		ViewSwitcher.gameView = gView;
+		ViewSwitcher.gameOverView = goView;
 	}
 
-	public void setViewOrder(View ... views) {
-		for (View view : views) {
-			this.views.add(view);
-		}
-	}
-
-	private void chooseView(int index) {
-		//Populate the pane with UI elements before showing the view.
-		views.get(index).setUp();
-		stage.setScene(new Scene(views.get(index).getUI()));
-	}
-
-	public void setView(int i){
-		if (i > views.size() - 1)
-			chooseView(views.size()-1);
-		else if(i < 0)
-			chooseView(0);
-		else
-			chooseView(i);
-	}
-
-	public void nextView() {
-		if(views.isEmpty()){
-			throw new IndexOutOfBoundsException("ViewSwitcher contains no views. Have you set views using setViewOrder()?");
-		}
+	public static void setWelcomeView(){
+		welcomeView.setUp();
 		
-		if (viewCounter >= views.size() - 1)
-			viewCounter = 0; // reset viewCounter
-		else
-			viewCounter++;
+		if(welcomeScene == null)
+			welcomeScene = new Scene(welcomeView.getUI());
+		welcomeScene.setCursor(Cursor.DEFAULT);
+		welcomeScene.getStylesheets().add("file:style/welcomeviewstyle.css");
+		primaryStage.setScene(welcomeScene);
+	}
+	
+	public static void setGameView(){
+		gameView.setUp();
 		
-		chooseView(viewCounter);
+		if(gameScene == null)
+			gameScene = new Scene(gameView.getUI());
+		gameScene.setCursor(Cursor.NONE); //hide the cursor so we can display players shape
+		gameScene.getStylesheets().add("file:style/gameviewstyle.css");
+		primaryStage.setScene(gameScene);
+	}
+	
+	public static void setGameOverView(){
+		gameOverView.setUp();
+		
+		if(gameOverScene == null)
+			gameOverScene = new Scene(gameOverView.getUI());
+		welcomeScene.setCursor(Cursor.DEFAULT);
+		gameOverScene.getStylesheets().add("file:style/gameoverviewstyle.css");
+		primaryStage.setScene(gameOverScene);
 	}
 }

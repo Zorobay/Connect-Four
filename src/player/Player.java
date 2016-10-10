@@ -21,6 +21,13 @@ public class Player {
 		return color;
 	}
 	
+	public String getColorCSS(){
+		int red = (int) (color.getRed()*255);
+		int green = (int) (color.getGreen()*255);
+		int blue = (int) (color.getBlue()*255);
+		return "rgb(" + red + ", " + green + ", " + blue + ")";
+	}
+	
 	public Shape getShape(){
 		return null;
 	}
@@ -37,5 +44,10 @@ public class Player {
 	@Override
 	public String toString(){
 		return "Player(name: " + name + ", color: " + color + ", shape: null)";
+	}
+	
+	@Override
+	public int hashCode(){
+		return name.hashCode();
 	}
 }
