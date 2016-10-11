@@ -1,7 +1,8 @@
-####Connect Four! 
+Connect Four! 
 
-##---Features---
+---Features---
 * 2 players
+* Chose player color
 * Saves highscore, both wins and losses
 * Set custom size for game board
 * Fully javadoc documented code
