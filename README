@@ -1,6 +1,6 @@
-This is a connect 4 game! 
+####Connect Four! 
 
----Features---
+##---Features---
 * 2 players
 * Saves highscore, both wins and losses
 * Set custom size for game board
