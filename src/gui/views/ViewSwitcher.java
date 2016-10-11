@@ -4,19 +4,36 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * A static class used to switch views
+ *
+ * @author Sebastian Hegardt
+ * @version 1.0
+ * @since 2016-10-11
+ */
 public class ViewSwitcher {
 
 	private static Stage primaryStage;
 	private static View welcomeView, gameView, gameOverView;
 	private static Scene welcomeScene, gameScene, gameOverScene;
 
-	public static void initiateViewSwitcher(Stage stage, WelcomeView wView, GameView gView, GOView goView) {
+	/**
+	 * Specifies the views contained in this view switcher.
+	 * @param stage the root note for the application.
+	 * @param wView the welcome view, to be shown first
+	 * @param gView the game view
+	 * @param goView the high score view
+	 */
+	public static void initiateViewSwitcher(Stage stage, WelcomeView wView, GameView gView, GameOverView goView) {
 		primaryStage = stage;
 		ViewSwitcher.welcomeView = wView;
 		ViewSwitcher.gameView = gView;
 		ViewSwitcher.gameOverView = goView;
 	}
 
+	/**
+	 * Displays welcome view.
+	 */
 	public static void setWelcomeView(){
 		welcomeView.setUp();
 		
@@ -27,6 +44,9 @@ public class ViewSwitcher {
 		primaryStage.setScene(welcomeScene);
 	}
 	
+	/**
+	 * Displays game view.
+	 */
 	public static void setGameView(){
 		gameView.setUp();
 		
@@ -37,6 +57,9 @@ public class ViewSwitcher {
 		primaryStage.setScene(gameScene);
 	}
 	
+	/**
+	 * Displays high score view.
+	 */
 	public static void setGameOverView(){
 		gameOverView.setUp();
 		

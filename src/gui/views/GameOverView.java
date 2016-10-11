@@ -9,13 +9,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import player.PlayerList;
 
-public class GOView extends View{
+public class GameOverView extends View{
 	
 	private final BorderPane pane = new BorderPane();
 	private final Button rematchButton = new Button("Rematch");
 	private final Button newGameButton = new Button("New Game");
 	
-	public GOView(PlayerList pList, GameBoard gBoard){
+	public GameOverView(PlayerList pList, GameBoard gBoard){
 		super(pList, gBoard);
 	}
 

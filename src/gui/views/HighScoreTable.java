@@ -12,7 +12,7 @@ import logging.HighScore;
 import player.Player;
 
 /**
- * A components that represents a table showing the high score.
+ * A component that represents a table showing the high score.
  *
  * @author Sebastian Hegardt
  * @version 1.0

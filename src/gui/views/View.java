@@ -4,6 +4,13 @@ import gui.board.GameBoard;
 import javafx.scene.layout.Pane;
 import player.PlayerList;
 
+/**
+ * An abstract class specifying a view
+ *
+ * @author Sebastian Hegardt
+ * @version 1.0
+ * @since 2016-10-11
+ */
 public abstract class View{
 	
 	protected PlayerList playerList;
@@ -14,6 +21,7 @@ public abstract class View{
 		this.gameBoard = gameBoard;
 	}
 	/**
+	 * Returns the root pane.
 	 * @return The pane that contains all UI elements for this view.
 	 */
 	public abstract Pane getUI();

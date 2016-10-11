@@ -18,10 +18,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import player.Player;
 import player.PlayerList;
 
+/**
+ * The first view to be displayed for the user.
+ *
+ * @author Sebastian Hegardt
+ * @version 1.0
+ * @since 2016-10-11
+ */
 public class WelcomeView extends View {
 
 	private final BorderPane pane = new BorderPane();
@@ -36,6 +42,9 @@ public class WelcomeView extends View {
 		super(playerList, gameBoard);
 	}
 	
+	/**
+	 * Adds content to the view. Is to be called right before switching views, by the ViewSwitcher.
+	 */
 	@Override
 	public void setUp() {
 
@@ -84,6 +93,9 @@ public class WelcomeView extends View {
 		pane.setBottom(buttons);
 	}
 	
+	/**
+	 * Sets up the two color pickers.
+	 */
 	private void setUpColorPickers() {
 		colorPicker1 = new ColorPicker(Color.GREEN);
 		colorPicker1.setPrefWidth(60);
@@ -91,6 +103,10 @@ public class WelcomeView extends View {
 		colorPicker2.setPrefWidth(60);
 	}
 	
+	/**
+	 * Sets up the two ListView objects that control the board size.
+	 * @param rowSizeControls the HBox which the controls will be added to.
+	 */
 	private void setUpBoardSizeControls(HBox rowSizeControls) {
 		// Setup function to choose game board size
 		rowList = new ListView<Integer>();
@@ -106,11 +122,18 @@ public class WelcomeView extends View {
 				new VBox(new Label("Columns"), colList));
 	}
 
+	/**
+	 * Returns the root pane.
+	 * @return The pane that contains all UI elements for this view.
+	 */
 	@Override
 	public Pane getUI() {
 		return pane;
 	}
 
+	/**
+	 * This event handler is fired when the go button is clicked.
+	 */
 	private final EventHandler<MouseEvent> goButtonClicked = event -> {
 		Player[] players = { new Player(tFieldPlayer1.getText(), colorPicker1.getValue()),
 				new Player(tFieldPlayer2.getText(), colorPicker2.getValue()) };
@@ -121,6 +144,9 @@ public class WelcomeView extends View {
 		ViewSwitcher.setGameView();
 	};
 	
+	/**
+	 * This event handler is fired when the high score button is clicked.
+	 */
 	private final EventHandler<ActionEvent> highScoreButtonClicked = event -> {
 		ViewSwitcher.setGameOverView();
 	};

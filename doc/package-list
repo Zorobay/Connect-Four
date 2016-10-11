@@ -1,1 +1,6 @@
+gui
 gui.board
+gui.guielements
+gui.views
+logging
+player

@@ -12,17 +12,22 @@ import java.util.Set;
 import player.Player;
 import player.PlayerList;
 
+/**
+ * A static utility class to log high scores.
+ *
+ * @author Sebastian Hegardt
+ * @version 1.0
+ * @since 2016-10-11
+ */
 public class HighScoreLogger {
 
 		private static BufferedWriter writer;
 		public static final File HIGH_SCORE_FILE = new File("highscore.csv");
 		private static HighScore highScore;
-		private static final DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
-		private static final DateFormat dateAndTimeFormat = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
-		private static Calendar cal;
-		private static boolean hasBeenInitiated = false;
 		
-		
+		/**
+		 * Initiates the logger by opening the logger file, and gets a new instance of HighScore.
+		 */
 		private static void initLogger(){
 			
 			highScore = HighScore.getInstance(); //read high scores and convert to HighScore
@@ -32,10 +37,12 @@ public class HighScoreLogger {
 			} catch (IOException e) {
 				System.out.println("Failed to open or create " + HIGH_SCORE_FILE.getName());
 			}
-			
-			hasBeenInitiated = true;
 		}
 		
+		/**
+		 * Writes a win to the high score file.
+		 * @param playerList contains the winner and looser.
+		 */
 		public static void registerWin(PlayerList playerList){
 			initLogger();
 			
@@ -45,6 +52,10 @@ public class HighScoreLogger {
 			log(highScore);
 		}
 		
+		/**
+		 * Writes entire HighScore object to file.
+		 * @param hs HighScore to be written to high score file.
+		 */
 		private static void log(HighScore hs){
 			try {
 				Set<Player> players = hs.getPlayers();
@@ -59,6 +70,9 @@ public class HighScoreLogger {
 			closeLogger();
 		}
 		
+		/**
+		 * Closes the writer.
+		 */
 		public static void closeLogger(){
 			try {
 				writer.close();

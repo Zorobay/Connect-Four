@@ -119,33 +119,55 @@ public class GameView extends View implements Observer{
 		}
 	}
 	
+	/**
+	 * If type == GameOverType.WIN then log a win.
+	 * @param type type of register
+	 */
 	private void register(GameOverType type){
 		if(type == GameOverType.WIN)
 			HighScoreLogger.registerWin(gameBoard.getPlayerList());
 	}
 	
+	/**
+	 * Prepares view for a rematch.
+	 */
 	private void clearAndRematch(){
 		gameBoard.resetRematch();
 		playerList.newGame();
 	}
 	
+	/**
+	 * Nukes internal GameBoard, the PlayerList and switches view to WelcomeView.
+	 */
 	private void clearAndGoToWelcomeView(){
 		gameBoard.nuke();
 		playerList.nuke();
 		ViewSwitcher.setWelcomeView();
 	}
 	
+	/**
+	 * Resets the internal GameBoard and PlayerList.
+	 * Switches view to GameOverView.
+	 */
 	private void clearAndGoToHighScore(){
 		gameBoard.resetRematch();
 		playerList.newGame();
 		ViewSwitcher.setGameOverView();
 	}
 	
+	/**
+	 * Returns the pane containing all components for this View.
+	 */
 	@Override
 	public Pane getUI() {
 		return pane;
 	}
 
+	/**
+	 * As a listener to the GameBoard, this method responds to a user move on the game board.
+	 * If game over or draw, switches to appropriate View.
+	 * If not, sets next player.
+	 */
 	@Override
 	public void update(Observable board, Object obj) {
 
