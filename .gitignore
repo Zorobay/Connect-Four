@@ -5,3 +5,7 @@
 
 #Java
 /bin
+
+#misc
+*.csv
+log_*

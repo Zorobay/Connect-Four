@@ -1,6 +1,7 @@
 package gui.views;
 
 import java.util.Observable;
+
 import java.util.Observer;
 import java.util.Optional;
 
@@ -16,11 +17,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Font;
 import logging.HighScoreLogger;
 import logging.Logger;
 import player.PlayerList;
 
+/**
+ * The view that holds all components during game time.
+ *
+ * @author Sebastian Hegardt
+ * @version 1.0
+ * @since 2016-10-11
+ */
 public class GameView extends View implements Observer{
 
 	private Label currentPlayer;
@@ -28,6 +35,11 @@ public class GameView extends View implements Observer{
 	private Alert gameOverDialog;
 	private enum GameOverType{WIN, DRAW};
 	
+	/**
+	 * Constructor.
+	 * @param pList the list of playing Player objects.
+	 * @param gBoard the GameBoard to be displayed. 
+	 */
 	public GameView(PlayerList pList, GameBoard gBoard){
 		super(pList, gBoard);
 		
@@ -35,6 +47,10 @@ public class GameView extends View implements Observer{
 		gameBoard.addObserver(this);
 	}
 	
+	/**
+	 * Populates the view with components. 
+	 * To be called when PlayerList contains all players.
+	 */
 	public void setUp(){
 		
 		if(playerList.getNumPlayers() > 0)
@@ -50,15 +66,18 @@ public class GameView extends View implements Observer{
 		pane.setTop(currentPlayer);
 	}
 
+	/**
+	 * Creates and shows a dialog.
+	 * The message and icon depends on if a win was registered, or a draw.
+	 * @param type what type of message to display e.g. win or draw.
+	 * @param message the message text of the dialog.
+	 */
 	private void showGameOverDialog(GameOverType type, String message){
 		gameOverDialog = new Alert(AlertType.CONFIRMATION);
 		gameOverDialog.setContentText(null);
 		ImageView imgWin = new ImageView(new Image("file:img/win.gif"));
-		imgWin.autosize();
 		imgWin.setScaleX(0.4);
 		imgWin.setScaleY(0.4);
-		imgWin.prefHeight(60);
-		imgWin.prefWidth(60);
 		
 		ImageView imgDraw = new ImageView(new Image("file:img/draw.gif"));
 		

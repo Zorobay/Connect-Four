@@ -26,7 +26,7 @@ public class GOView extends View{
 
 	@Override
 	public void setUp() {
-		GameOverTable goTable = new GameOverTable();
+		HighScoreTable goTable = new HighScoreTable();
 		pane.setCenter(goTable.getUI());
 		
 		//Setup buttons
